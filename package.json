@@ -2,11 +2,11 @@
   "name": "nodejs-mongo",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js",
-    "build": "node server.js"
+    "start": "nodemon src/server.js",
+    "build": "node src/server.js"
   },
   "keywords": [],
   "author": "",
