@@ -11,8 +11,28 @@ const server = async () => {
 
     app.use(express.json())
 
-    app.get('/user', (req, res) => {
-      // return res.send({ users: users })
+    app.get('/user', async (req, res) => {
+      try {
+        const users = await User.find({})
+        return res.send({ users })
+      } catch (err) {
+        console.log(err)
+        return res.status(500).send({ err: err.message })
+      }
+    })
+
+    app.get('/user/:userId', async (req, res) => {
+      try {
+        const { userId } = req.params
+        if (!mongoose.isValidObjectId(userId))
+          return res.status(400).send({ err: 'invalid userId' })
+
+        const user = await User.findOne({ _id: userId })
+        return res.send({ user })
+      } catch (err) {
+        console.log(err)
+        return res.status(500).send({ err: err.message })
+      }
     })
 
     app.post('/user', async (req, res) => {
@@ -26,6 +46,42 @@ const server = async () => {
             .send({ err: 'Both first and last names are required' })
         const user = new User(req.body)
         await user.save()
+        return res.send({ user })
+      } catch (err) {
+        console.log(err)
+        return res.status(500).send({ err: err.message })
+      }
+    })
+
+    app.delete('/user/:userId', async (req, res) => {
+      try {
+        const { userId } = req.params
+        if (!mongoose.isValidObjectId(userId))
+          return res.status(400).send({ err: 'invalid userId' })
+        const user = await User.findOneAndDelete({ _id: userId })
+        return res.send({ user })
+      } catch (err) {
+        console.log(err)
+        return res.status(500).send({ err: err.message })
+      }
+    })
+
+    app.put('/user/:userId', async (req, res) => {
+      try {
+        const { userId } = req.params
+        if (!mongoose.isValidObjectId(userId))
+          return res.status(400).send({ err: 'invalid userId' })
+
+        const { age } = req.body
+        if (!age) return res.status(400).send({ err: 'age is required' })
+        if (typeof age !== 'number')
+          return res.status(400).send({ err: 'age must be a number' })
+
+        const user = await User.findByIdAndUpdate(
+          userId,
+          { $set: { age } },
+          { new: true }
+        )
         return res.send({ user })
       } catch (err) {
         console.log(err)
