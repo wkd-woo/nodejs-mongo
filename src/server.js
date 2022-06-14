@@ -2,11 +2,14 @@ const express = require('express')
 const app = express()
 const { userRouter, blogRouter } = require('./routes')
 const mongoose = require('mongoose')
+const { generateFakeData } = require('../faker')
 require('dotenv').config()
 
 const server = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI)
+
+    generateFakeData(100, 10, 300)
     console.log('Mongodb connected')
     app.use(express.json())
 
