@@ -5,16 +5,18 @@
   "main": "src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon src/server.js",
-    "build": "node src/server.js"
+    "start": "nodemon --ignore client.js src/server.js",
+    "build": "node --ignore src/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.27.2",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "^4.17.2",
+    "faker": "^5.5.3",
     "mongodb": "^4.2.2",
     "mongoose": "^6.3.6",
     "nodemon": "^2.0.15"
