@@ -9,7 +9,7 @@ const server = async () => {
   try {
     await mongoose.connect(process.env.MONGO_URI)
 
-    //await generateFakeData(100, 10, 300)
+    generateFakeData(100, 10, 300)
     console.log('Mongodb connected')
     app.use(express.json())
 
