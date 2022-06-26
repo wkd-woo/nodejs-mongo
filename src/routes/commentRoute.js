@@ -17,11 +17,13 @@ commentRouter.post('/', async (req, res) => {
       return res.status(400).send({ err: 'blog is invalid' })
     if (!isValidObjectId(userId))
       return res.status(400).send({ err: 'userId is invalid' })
-    if (typeof content != 'string')
-      return res.status(400).send({ err: 'content is requored' })
+    if (typeof content !== 'string')
+      return res.status(400).send({ err: 'content is required' })
 
-    const blog = await Blog.findByIdAndUpdate(blogId)
-    const user = await User.findByIdAndUpdate(userId)
+    const [blog, user] = await Promise.all([
+      Blog.findById(blogId),
+      User.findById(userId),
+    ])
 
     if (!blog || !user)
       return res.status(400).send({ err: 'blog or user does not exist' })
@@ -29,7 +31,11 @@ commentRouter.post('/', async (req, res) => {
       return res.status(400).send({ err: 'blog is not available' })
 
     const comment = new Comment({ content, user, blog })
-    await comment.save()
+    await Promise.all([
+      comment.save(),
+      Blog.updateOne({ _id: blogId }, { $push: { comments: comment } }),
+    ])
+
     return res.send({ comment })
   } catch (err) {
     return res.status(400).sened({ err: err.message })

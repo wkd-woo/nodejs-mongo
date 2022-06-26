@@ -63,12 +63,12 @@ blogRouter.put('/:blogId', async (req, res) => {
   try {
     const { blogId } = req.params
     if (!isValidObjectId(blogId))
-      res.status(400).send({ err: 'blogId is invalid' })
+      return res.status(400).send({ err: 'blogId is invalid' })
     const { title, content } = req.body
     if (typeof title !== 'string')
-      res.status(400).send({ err: 'title is required' })
+      return res.status(400).send({ err: 'title is required' })
     if (typeof content !== 'string')
-      res.status(400).send({ err: 'content is required' })
+      return res.status(400).send({ err: 'content is required' })
 
     let blog = await Blog.findById(blogId)
     /*
